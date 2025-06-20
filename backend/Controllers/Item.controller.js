@@ -1,0 +1,47 @@
+import { uploadOnCloudinary } from "../config/Cloudinary.js";
+import Item from "../Model/Item.schema.js";
+
+export const addItem=async(req,res)=>{
+    try {
+        const {name,description, type}=req.body;
+
+    if([name,description,type].some((item)=>item ==='')){
+        return res.status(400).json({
+            success:false,
+            message:"All field required"
+        })
+    }        
+    let coverImageFiles=req?.files?.coverImage?.[0]
+
+    let coverImage;
+    if(coverImageFiles){
+        coverImage=await uploadOnCloudinary(coverImageFiles.path)
+    }     
+
+    let additionalImagesfiles=req?.files?.additionalImages || []
+    
+    const additionalImagesURLs=await Promise.all(
+        additionalImagesfiles.map((file)=>uploadOnCloudinary(file.path))
+    )
+
+    const newItem=await Item.create({
+        name,
+        description,
+        type,
+        coverImage,
+        additionalImages:additionalImagesURLs
+    })
+
+    return res.status(201).json({
+        success:true,
+        message:"Item added successfully",
+        item:newItem
+    })
+
+    } catch (error) {
+         return res.status(500).json({
+      success: false,
+      message: `sendItem error: ${error.message}`,
+    });
+    }
+}

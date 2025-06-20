@@ -1,12 +1,22 @@
 import express from "express";
 import dotenv from 'dotenv'
 import { mongodbConnect } from "./config/MongoDb_connect.js";
+import cors from 'cors'
+import itemRoutes from './Routes/Item.routes.js'
 
 const app=express();
 dotenv.config()
 
 
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
+app.use(cors({
+    origin:"http://localhost:5173",
+    credentials:true
+}))
 
+
+app.use('/api/item',itemRoutes)
 
 const port =process.env.PORT  || 5000
 
