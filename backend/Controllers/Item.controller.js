@@ -45,3 +45,28 @@ export const addItem=async(req,res)=>{
     });
     }
 }
+
+export const getAllItems=async(req,res)=>{
+    try {
+        const items=await Item.find()
+
+        if(!items.length===0){
+            return res.status(400).json({
+                success:false,
+                message:"No Items found"
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:"All items retrieved",
+            items
+        })
+
+    } catch (error) {
+      return res.status(500).json({
+      success: false,
+      message: `getAllItems error: ${error.message}`,
+    });   
+    }
+}
