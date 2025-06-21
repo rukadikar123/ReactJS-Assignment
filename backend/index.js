@@ -19,9 +19,9 @@ app.use(cors({
 app.use('/api/item',itemRoutes)
 
 const port =process.env.PORT  || 5000
-
+mongodbConnect()
 app.listen(port, ()=>{
-    mongodbConnect()
+    
     console.log(`server is running on ${port}`);
     
 })

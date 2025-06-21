@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom"
 import Navbar from "./Components/Navbar"
 import AddItem from "./Components/AddItem"
 import ViewItem from "./Components/ViewItem"
-
+import {ToastContainer} from "react-toastify"
 
 function App() {
 
@@ -13,6 +13,7 @@ function App() {
           <Route path="/" element={<AddItem/>} />
           <Route path="/view" element={<ViewItem/>} />
         </Routes>
+        <ToastContainer/>
     </>
   )
 }

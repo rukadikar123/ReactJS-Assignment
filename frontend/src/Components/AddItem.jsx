@@ -1,68 +1,90 @@
-import  { useState } from "react";
-import axios from 'axios'
-
+import { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useRef } from "react";
 
 function AddItem() {
   const ITEM_TYPES = ["Shirt", "Pant", "Shoes", "Sports Gear", "Other"];
 
   const [itemType, setItemType] = useState("");
-  const [itemName,setItemName]=useState("")
-  const [description,setDescription]=useState("")
-  const [coverImage,setCoverImage]=useState(null)
-  const [additionalImages,setAdditionalImages]=useState([])
-  const [message,setmessage]=useState("")
+  const [itemName, setItemName] = useState("");
+  const [description, setDescription] = useState("");
+  const [coverImage, setCoverImage] = useState(null);
+  const [additionalImages, setAdditionalImages] = useState([]);
 
-const handleAddItem=async(e)=>{
-  e.preventDefault()
+  const coverRef = useRef();
+  const additionalRef = useRef();
 
-  if(!itemName || !description || !itemType){
-        setmessage("all fields required")
-        return;
-      }
+  const handleAddItem = async (e) => {
+    e.preventDefault();
 
-      const formData= new FormData()
+    if (!itemName || !description || !itemType) {
+      toast("all fields required");
+      return;
+    }
 
-      formData.append("name",itemName)
-      formData.append("description",description)
-      formData.append("type",itemType)
-      
-      if(coverImage){
-        formData.append("coverImage",coverImage)
-      }
+    const formData = new FormData();
 
-      additionalImages.forEach((file)=> FormData.append("additionImage",file))
+    formData.append("name", itemName);
+    formData.append("description", description);
+    formData.append("type", itemType);
+
+    if (coverImage) {
+      formData.append("coverImage", coverImage);
+    }
+
+    additionalImages.forEach((file) =>
+      formData.append("additionalImages", file)
+    );
 
     try {
-      const res=await axios.post(`${import.meta.env.VITE_API_URL}/api/item/add`,formData,{
-        headers:{
-          "Content-Type":"multipart/form-data"
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/item/add`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      })
+      );
+      console.log(res);
 
-      if(res.status.success){
-        setmessage("item added successfully")
-        setItemName("")
-        setItemType("")
-        setDescription("")
-        setCoverImage(null)
-        setAdditionalImages([])
-      }else{
-        setmessage("Something went wrong")
+      if (res?.data?.success) {
+        toast("Item added successfully");
+        setItemName("");
+        setItemType("");
+        setDescription("");
+        setCoverImage(null);
+        setAdditionalImages([]);
+        coverRef.current.value = null;
+        additionalRef.current.value = null;
       }
-
     } catch (error) {
       console.log(error);
-      setmessage("server error")
-      
     }
-}
+  };
 
   return (
     <div className="mt-10 h-full">
       <h2 className="text-2xl font-semibold my-6 ml-20">Add New Item</h2>
-      <form onSubmit={handleAddItem} className="flex flex-col w-1/2 px-20 gap-4">
-        <input type="text" placeholder="Enter Item name"  className="p-2 outline-none border"/>
-        <input type="text" placeholder="Enter Item Description" className="p-2 outline-none border" />
+      <form
+        onSubmit={handleAddItem}
+        className="flex flex-col w-1/2 px-20 gap-4"
+      >
+        <input
+          value={itemName}
+          type="text"
+          onChange={(e) => setItemName(e.target.value)}
+          placeholder="Enter Item name"
+          className="p-2 outline-none border"
+        />
+        <input
+          value={description}
+          type="text"
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Enter Item Description"
+          className="p-2 outline-none border"
+        />
         <select
           value={itemType}
           onChange={(e) => setItemType(e.target.value)}
@@ -76,14 +98,29 @@ const handleAddItem=async(e)=>{
         </select>
         <div className="border flex flex-col gap-4 p-3">
           <label>CoverImage</label>
-          <input type="file" accept="image/*" onChange={(e)=>setCoverImage(e.target.files[0])} />
+          <input
+            ref={coverRef}
+            type="file"
+            accept="image/*"
+            onChange={(e) => setCoverImage(e.target.files[0])}
+          />
         </div>
-         <div className="border flex flex-col gap-4 p-3">
+        <div className="border flex flex-col gap-4 p-3">
           <label>Additional Images</label>
-          <input type="file" accept="image/*" multiple onChange={(e)=>setAdditionalImages([...e.target.files])} />
+          <input
+            ref={additionalRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => setAdditionalImages([...e.target.files])}
+          />
         </div>
-        <button type="submit" className="bg-blue-400 p-2 text-white text-lg font-medium hover:bg-blue-600 " >Add Item</button>
-        {message && <p className="text-sm mt-2">{message}</p>}
+        <button
+          type="submit"
+          className="bg-blue-400 p-2 text-white text-lg font-medium hover:bg-blue-600 "
+        >
+          Add Item
+        </button>
       </form>
     </div>
   );
