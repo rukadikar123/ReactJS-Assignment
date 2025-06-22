@@ -11,7 +11,7 @@ dotenv.config()
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(cors({
-    origin:"https://reactjs-assignment-item-management-l0gc.onrender.com",
+    origin:"https://react-js-assignment-sooty.vercel.app/",
     credentials:true
 }))
 
