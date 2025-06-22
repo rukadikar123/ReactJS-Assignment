@@ -35,7 +35,7 @@ This project is a simple item management application built with React and Vite. 
    ```
 
 3. **Open your browser:**
-   - Visit [http://localhost:5173](http://localhost:5173)
+   - Visit [Live Link](https://reactjs-assignment-item-management-l0gc.onrender.com)
 
 
 
