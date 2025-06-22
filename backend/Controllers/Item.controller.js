@@ -18,18 +18,20 @@ export const addItem=async(req,res)=>{
         coverImage=await uploadOnCloudinary(coverImageFiles.path)
     }     
 
-    let additionalImagesfiles=req?.files?.additionalImages || []
-    
-    const additionalImagesURLs=await Promise.all(
-        additionalImagesfiles.map((file)=>uploadOnCloudinary(file.path))
-    )
+    const additionalImages = [];
+    const additionalImageFiles = req?.files?.additionalImages || [];
+
+    for (const file of additionalImageFiles) {
+      const url = await uploadOnCloudinary(file.path);
+      if (url) additionalImages.push(url);
+    }
 
     const newItem=await Item.create({
         name,
         description,
         type,
         coverImage,
-        additionalImages:additionalImagesURLs
+        additionalImages
     })
 
     return res.status(201).json({
@@ -39,6 +41,17 @@ export const addItem=async(req,res)=>{
     })
 
     } catch (error) {
+
+         const allFiles = [
+      ...(req.files?.coverImage || []),
+      ...(req.files?.additionalImages || []),
+    ];
+    allFiles.forEach((file) => {
+      if (file?.path && fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+    });
+
          return res.status(500).json({
       success: false,
       message: `sendItem error: ${error.message}`,

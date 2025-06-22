@@ -15,11 +15,11 @@ cloudinary.config({
 
   try {
     const result = await cloudinary.uploader.upload(filePath);
-    fs.unlinkSync(filePath);
+     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     return result?.secure_url;
   } catch (error) {
     console.log(error);
-    fs.unlinkSync(filePath);
+   if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
   }
 };
 //   {
