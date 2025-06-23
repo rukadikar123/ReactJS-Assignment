@@ -66,10 +66,10 @@ function AddItem() {
 
   return (
     <div className="mt-10 h-full">
-      <h2 className="text-2xl font-semibold my-6 ml-20">Add New Item</h2>
+      <h2 className="text-2xl font-semibold my-6 ml-4 md:ml-20">Add New Item</h2>
       <form
         onSubmit={handleAddItem}
-        className="flex flex-col w-1/2 px-20 gap-4"
+        className="flex flex-col md:w-1/2 px-4 md:px-20 gap-4"
       >
         <input
           value={itemName}

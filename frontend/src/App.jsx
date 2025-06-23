@@ -40,7 +40,7 @@ const openModal=(Item)=>{
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
-        className="bg-white md:h-[95vh] h-[70vh] mx-auto mt-4 p-4 overflow-auto border shadow-lg border-slate-400 rounded-lg w-[85%] md:w-[70%] transition-all duration-300 ease-in-out"
+        className="bg-white md:h-[95vh] h-[80vh] mx-auto mt-10 md:mt-4 p-4 overflow-auto border shadow-lg border-slate-400 rounded-lg w-[85%] md:w-[70%] transition-all duration-300 ease-in-out"
       >
         <Suspense fallback={<div>Loading...</div>}>
           <Itemdetails selectedItem={selectedItem} onClose={closeModal} />
